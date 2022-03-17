@@ -20,7 +20,7 @@ jobs:
     steps:
       - name: git mirror single branch test
         run: |
-          git clone --filter=tree:0 ${{ github.event.inputs.git_remote }} tmp
+          git clone ${{ github.event.inputs.git_remote }} tmp
           cd tmp
           git remote add github https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
           git push github origin/${{ github.event.inputs.mirror_branch }}
