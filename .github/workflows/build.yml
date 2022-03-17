@@ -6,9 +6,6 @@ on:
       git_remote:
         default: 'https://kernel.googlesource.com/pub/scm/linux/kernel/git/rt/linux-stable-rt.git/'
         type: string
-      mirror_repo:
-        default: ${{ github.repository }}
-        type: string
       mirror_branch:
         default: 'v5.15-rt-rebase'
         type: string
@@ -25,7 +22,7 @@ jobs:
         run: |
           git clone --filter=tree:0 ${{ inputs.git_remote }} tmp
           cd tmp
-          git remote add github https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ inputs.mirror_repo }}
+          git remote add github https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
           git push github origin/${{ inputs.mirror_branch }}
 
 permissions:
