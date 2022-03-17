@@ -1,7 +1,7 @@
 name: Mirror
 
 on:
-  workflow_call:
+  workflow_dispatch:
     inputs:
       git_remote:
         default: 'https://kernel.googlesource.com/pub/scm/linux/kernel/git/rt/linux-stable-rt.git/'
