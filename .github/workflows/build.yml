@@ -1,0 +1,34 @@
+name: Mirror
+
+on:
+  workflow_call:
+    inputs:
+      git_remote:
+        default: 'https://kernel.googlesource.com/pub/scm/linux/kernel/git/rt/linux-stable-rt.git/'
+        type: string
+      mirror_repo:
+        default: ${{ github.repository }}
+        type: string
+      mirror_branch:
+        default: 'v5.15-rt-rebase'
+        type: string
+
+# Ensures that only one mirror task will run at a time.
+concurrency:
+  group: git-mirror
+
+jobs:
+  git-mirror:
+    runs-on: ubuntu-latest
+    steps:
+      - name: git mirror single branch test
+        run: |
+          git clone --filter=tree:0 ${{ inputs.git_remote }} tmp
+          cd tmp
+          git remote add github https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ inputs.mirror_repo }}
+          git push github origin/${{ inputs.mirror_branch }}
+
+permissions:
+  contents: write
+  deployments: write
+  statues: read
