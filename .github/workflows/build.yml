@@ -28,4 +28,4 @@ jobs:
 permissions:
   contents: write
   deployments: write
-  statues: read
+  statuses: read
