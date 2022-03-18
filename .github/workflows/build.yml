@@ -6,8 +6,8 @@ on:
       git_remote:
         default: 'https://kernel.googlesource.com/pub/scm/linux/kernel/git/rt/linux-stable-rt.git/'
         type: string
-      mirror_branch:
-        default: 'v5.15-rt'
+      mirror_branches:
+        default: 'v5.4-rt,v5.15-rt'
         type: string
 
 # Ensures that only one mirror task will run at a time.
@@ -18,12 +18,16 @@ jobs:
   git-mirror:
     runs-on: ubuntu-latest
     steps:
-      - name: git mirror single branch test
+      - name: git mirror branches test
         run: |
-          git clone --filter=blob:none -b ${{ github.event.inputs.mirror_branch }} ${{ github.event.inputs.git_remote }} tmp
+          branches_original=${{ github.event.inputs.mirror_branches }}
+          branches=(${branches_original//,/ })
+          git clone --filter=blob:none -b ${branches[0]} ${{ github.event.inputs.git_remote }} tmp
           cd tmp
           git remote add github https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
-          git push github refs/remotes/origin/${{ github.event.inputs.mirror_branch }}:refs/remotes/github/${{ github.event.inputs.mirror_branch }}
+          for branch in ${branches[@]}; do
+            git push github refs/remotes/origin/${branch}:refs/heads/${branch}
+          done;
 
 permissions:
   contents: write
