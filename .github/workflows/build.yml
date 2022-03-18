@@ -7,7 +7,7 @@ on:
         default: 'https://kernel.googlesource.com/pub/scm/linux/kernel/git/rt/linux-stable-rt.git/'
         type: string
       mirror_branch:
-        default: 'v5.15-rt-rebase'
+        default: 'v5.15-rt'
         type: string
 
 # Ensures that only one mirror task will run at a time.
@@ -23,7 +23,7 @@ jobs:
           git clone --filter=blob:none -b ${{ github.event.inputs.mirror_branch }} ${{ github.event.inputs.git_remote }} tmp
           cd tmp
           git remote add github https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
-          git push github origin/${{ github.event.inputs.mirror_branch }}:${{ github.event.inputs.mirror_branch }}
+          git push github origin/${{ github.event.inputs.mirror_branch }}:github/${{ github.event.inputs.mirror_branch }}
 
 permissions:
   contents: write
